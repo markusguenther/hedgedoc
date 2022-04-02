@@ -14,7 +14,6 @@ import { ConsoleLoggerService } from './logger/console-logger.service';
 import { BackendType } from './media/backends/backend-type.enum';
 import { SessionService } from './session/session.service';
 import { setupSpecialGroups } from './utils/createSpecialGroups';
-import { setupFrontendProxy } from './utils/frontend-integration';
 import { setupSessionMiddleware } from './utils/session';
 import { setupValidationPipe } from './utils/setup-pipes';
 import { setupPrivateApiDocs, setupPublicApiDocs } from './utils/swagger';
@@ -41,8 +40,6 @@ export async function setupApp(
       `Serving OpenAPI docs for private api under '/private/apidoc'`,
       'AppBootstrap',
     );
-
-    await setupFrontendProxy(app, logger);
   }
 
   await setupSpecialGroups(app);

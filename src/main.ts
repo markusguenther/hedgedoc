@@ -7,12 +7,12 @@ import { LogLevel } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 import { setupApp } from './app-init';
 import { AppModule } from './app.module';
 import { AppConfig } from './config/app.config';
 import { AuthConfig } from './config/auth.config';
-import { DatabaseConfig } from './config/database.config';
 import { MediaConfig } from './config/media.config';
 import { ConsoleLoggerService } from './logger/console-logger.service';
 
@@ -33,6 +33,9 @@ async function bootstrap(): Promise<void> {
   const appConfig = configService.get<AppConfig>('appConfig');
   const authConfig = configService.get<AuthConfig>('authConfig');
   const mediaConfig = configService.get<MediaConfig>('mediaConfig');
+
+  app.useWebSocketAdapter(new WsAdapter(app));
+
   if (!appConfig || !authConfig || !mediaConfig) {
     logger.error('Could not initialize config, aborting.', 'AppBootstrap');
     process.exit(1);

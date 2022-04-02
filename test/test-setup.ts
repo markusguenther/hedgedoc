@@ -5,6 +5,7 @@
  */
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { WsAdapter } from '@nestjs/platform-ws';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { RouterModule, Routes } from 'nest-router';
@@ -21,7 +22,6 @@ import { TokenAuthGuard } from '../src/auth/token.strategy';
 import { AuthorsModule } from '../src/authors/authors.module';
 import { AppConfig } from '../src/config/app.config';
 import { AuthConfig } from '../src/config/auth.config';
-import { DatabaseConfig } from '../src/config/database.config';
 import { MediaConfig } from '../src/config/media.config';
 import appConfigMock from '../src/config/mock/app.config.mock';
 import authConfigMock from '../src/config/mock/auth.config.mock';
@@ -289,6 +289,8 @@ export class TestSetupBuilder {
       this.testSetup.configService.get<MediaConfig>('mediaConfig'),
       await this.testSetup.app.resolve(ConsoleLoggerService),
     );
+
+    this.testSetup.app.useWebSocketAdapter(new WsAdapter(this.testSetup.app));
 
     for (const setupFunction of this.setupPostCompile) {
       await setupFunction();
